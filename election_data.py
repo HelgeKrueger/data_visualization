@@ -17,12 +17,15 @@ class ElectionData():
                 'FDP': 'yellow',
                 'AfD': 'blue',
                 'LINKE': 'purple'
-            }):
+            },
+            title='Election Data'):
 
         self.parties = parties
         self.party_to_color = party_to_color
         self.start_date = start_date
         self.date_column = date_column
+
+        self.title = title
 
         self.data = load_url(url, parties, date_column=date_column)
 
@@ -54,6 +57,7 @@ class ElectionData():
 
     def plot(self, figure):
         source = self.asColumnDataSource()
+        figure.title.text = self.title
 
         bands = {}
 

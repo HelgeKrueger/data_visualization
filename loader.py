@@ -1,6 +1,10 @@
 import pandas as pd
 
+import time
+
 def load_url(url, parties, date_format='%d.%m.%Y', date_column = 'Datum'):
+    print("Loading ... ", url)
+    start_time = time.time()
     data = pd.read_html(url)
     raw_data = data[1]
     raw_keys = raw_data.keys()
@@ -21,5 +25,6 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column = 'Datum'):
 
     polling_data['Idx'] = polling_data['Date']
     polling_data = polling_data.set_index('Idx').sort_index(ascending=True)
+    print("Done in ", time.time() - start_time, " ms")
 
     return polling_data
