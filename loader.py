@@ -2,7 +2,8 @@ import pandas as pd
 
 import time
 
-def load_url(url, parties, date_format='%d.%m.%Y', date_column = 'Datum'):
+
+def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     print("Loading ... ", url)
     start_time = time.time()
     data = pd.read_html(url)
@@ -13,13 +14,22 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column = 'Datum'):
         if 'Datum' in raw_keys:
             date_column = 'Datum'
         else:
-            print("Cannot find date_column ", date_column, " in keys: ", raw_keys)
-
+            print(
+                "Cannot find date_column ",
+                date_column,
+                " in keys: ",
+                raw_keys)
 
     polling_data = pd.DataFrame()
-    polling_data['Date'] = pd.to_datetime(raw_data[date_column], errors='coerce', format=date_format)
+    polling_data['Date'] = pd.to_datetime(
+        raw_data[date_column],
+        errors='coerce',
+        format=date_format)
     for party in parties:
-        polling_data[party] = pd.to_numeric(raw_data[party].apply(lambda x: x.split(' ')[0].replace(',', '.')), errors='coerce')
+        polling_data[party] = pd.to_numeric(
+            raw_data[party].apply(
+                lambda x: x.split(' ')[0].replace(
+                    ',', '.')), errors='coerce')
 
     polling_data = polling_data.dropna()
 
