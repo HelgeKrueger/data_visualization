@@ -1,6 +1,6 @@
 import pandas as pd
 
-from bokeh.models import ColumnDataSource
+from bokeh.models import Band, ColumnDataSource
 
 from loader import load_url
 
@@ -8,9 +8,19 @@ class ElectionData():
     def __init__(self, url, parties=['CDU', 'SPD', 'GRÜNE','FDP', 'LINKE' , 'AfD'],
             start_date=pd.to_datetime('2018-01-01'),
             time_period='30d',
-            date_column='Datum'):
+            date_column='Datum',
+            party_to_color={
+                'CDU/CSU': 'black',
+                'CDU': 'black',
+                'SPD': 'red',
+                'GRÜNE': 'green',
+                'FDP': 'yellow',
+                'AfD': 'blue',
+                'LINKE': 'purple'
+            }):
 
         self.parties = parties
+        self.party_to_color = party_to_color
         self.start_date = start_date
         self.date_column = date_column
 
@@ -40,4 +50,21 @@ class ElectionData():
 
     def asColumnDataSource(self):
         return ColumnDataSource(self.data.reset_index())
+
+
+    def plot(self, figure):
+        source = self.asColumnDataSource()
+
+        bands = {}
+
+        for party in self.parties:
+            color = self.party_to_color[party]
+            figure.circle('Date', party, source=source, size=4, color=color)
+            figure.line('Date', party + '_mean', source=source, color=color)
+
+            bands[party] = Band(base='Date', lower=party+'_low', upper=party+'_up', source=source, level='underlay', fill_alpha=0.2, line_width=1, fill_color=color)
+            
+            figure.add_layout(bands[party])
+
+        return figure
 
