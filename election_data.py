@@ -1,6 +1,6 @@
 import pandas as pd
 
-from bokeh.models import Band, ColumnDataSource
+from bokeh.models import Band, ColumnDataSource, Span
 
 from loader import load_url
 
@@ -27,12 +27,14 @@ class ElectionData():
                 'FDP': 'yellow',
                 'AfD': 'blue',
                 'LINKE': 'purple'},
-            title='Election Data'):
+            title='Election Data',
+            next_election_date=None):
 
         self.parties = parties
         self.party_to_color = party_to_color
         self.start_date = start_date
         self.date_column = date_column
+        self.next_election_date = next_election_date
 
         self.title = title
 
@@ -88,4 +90,13 @@ class ElectionData():
 
             figure.add_layout(bands[party])
 
+        self._plot_next_election(figure)
+
         return figure
+
+    def _plot_next_election(self, figure):
+        if self.next_election_date:
+            vline = Span(location=self.next_election_date, dimension='height', line_color='red', line_width=3)
+
+            figure.add_layout(vline)
+            figure.circle([self.next_election_date], [0])
