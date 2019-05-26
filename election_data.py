@@ -96,7 +96,11 @@ class ElectionData():
 
     def _plot_next_election(self, figure):
         if self.next_election_date:
-            vline = Span(location=self.next_election_date, dimension='height', line_color='red', line_width=3)
+            vline = Span(
+                location=self.next_election_date,
+                dimension='height',
+                line_color='red',
+                line_width=3)
 
             figure.add_layout(vline)
             figure.circle([self.next_election_date], [0])

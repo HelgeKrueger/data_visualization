@@ -7,8 +7,10 @@ from election_data import ElectionData
 
 output_file('output/election.html')
 
+
 def create_figure():
     return figure(plot_width=1024, plot_height=600, x_axis_type="datetime")
+
 
 germany = ElectionData(
     'https://www.wahlrecht.de/umfragen/emnid.htm',
@@ -37,18 +39,69 @@ germany.plot(germany_plot)
 
 european_election = ElectionData(
     'https://www.wahlrecht.de/umfragen/europawahl.htm',
-    title='Europawahl')
+    title='Europawahl',
+    next_election_date='2019-05-26')
 
 european_plot = create_figure()
 european_election.plot(european_plot)
 
 
-bremen = ElectionData('https://www.wahlrecht.de/umfragen/landtage/bremen.htm',
-                      title='Bremenwahl',
-                      parties=['CDU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
-                      time_period='30d')
+def bundesland(
+        url,
+        title,
+        parties,
+        next_election_date=None,
+        time_period='30d'):
+    data = ElectionData(
+        url,
+        title=title,
+        parties=parties,
+        next_election_date=next_election_date,
+        time_period=time_period)
 
-bremen_plot = create_figure()
-bremen.plot(bremen_plot)
+    plot = create_figure()
+    data.plot(plot)
 
-show(column(germany_plot, european_plot, bremen_plot))
+    return plot
+
+
+bremen_plot = bundesland('https://www.wahlrecht.de/umfragen/landtage/bremen.htm',
+                         'Bremenwahl',
+                         ['CDU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
+                         next_election_date=pd.to_datetime('2019-05-26'))
+brandenburg_plot = bundesland(
+    'https://www.wahlrecht.de/umfragen/landtage/brandenburg.htm',
+    'Brandenburg',
+    [
+        'CDU',
+        'SPD',
+        'GRÜNE',
+        'FDP',
+        'LINKE',
+        'AfD'],
+    next_election_date=pd.to_datetime('2019-09-01'))
+sachsen_plot = bundesland(
+    'https://www.wahlrecht.de/umfragen/landtage/sachsen.htm',
+    'Sachen',
+    [
+        'CDU',
+        'SPD',
+        'GRÜNE',
+        'FDP',
+        'LINKE',
+        'AfD'],
+    next_election_date=pd.to_datetime('2019-09-01'))
+thueringen_plot = bundesland(
+    'https://www.wahlrecht.de/umfragen/landtage/thueringen.htm',
+    'Sachen',
+    [
+        'CDU',
+        'SPD',
+        'GRÜNE',
+        'FDP',
+        'LINKE',
+        'AfD'],
+    next_election_date=pd.to_datetime('2019-10-27'))
+
+
+show(column(germany_plot, european_plot, bremen_plot, brandenburg_plot, sachsen_plot, thueringen_plot))
