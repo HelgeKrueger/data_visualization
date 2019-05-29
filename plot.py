@@ -40,7 +40,7 @@ germany.plot(germany_plot)
 european_election = ElectionData(
     'https://www.wahlrecht.de/umfragen/europawahl.htm',
     title='Europawahl',
-    next_election_date='2019-05-26')
+    next_election_date=pd.to_datetime('2019-05-26'))
 
 european_plot = create_figure()
 european_election.plot(european_plot)
@@ -65,10 +65,17 @@ def bundesland(
     return plot
 
 
-bremen_plot = bundesland('https://www.wahlrecht.de/umfragen/landtage/bremen.htm',
-                         'Bremenwahl',
-                         ['CDU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
-                         next_election_date=pd.to_datetime('2019-05-26'))
+bremen_plot = bundesland(
+    'https://www.wahlrecht.de/umfragen/landtage/bremen.htm',
+    'Bremenwahl',
+    [
+        'CDU',
+        'SPD',
+        'GRÜNE',
+        'FDP',
+        'LINKE',
+        'AfD'],
+    next_election_date=pd.to_datetime('2019-05-26'))
 brandenburg_plot = bundesland(
     'https://www.wahlrecht.de/umfragen/landtage/brandenburg.htm',
     'Brandenburg',
@@ -104,4 +111,11 @@ thueringen_plot = bundesland(
     next_election_date=pd.to_datetime('2019-10-27'))
 
 
-show(column(germany_plot, european_plot, bremen_plot, brandenburg_plot, sachsen_plot, thueringen_plot))
+show(
+    column(
+        germany_plot,
+        european_plot,
+        bremen_plot,
+        brandenburg_plot,
+        sachsen_plot,
+        thueringen_plot))

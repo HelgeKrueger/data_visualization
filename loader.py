@@ -3,6 +3,13 @@ import pandas as pd
 import time
 
 
+def parse_string(string):
+    if isinstance(string, str):
+        return string.split(' ')[0].replace(',', '.')
+
+    return string
+
+
 def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     print("Loading ... ", url)
     start_time = time.time()
@@ -27,9 +34,7 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
         format=date_format)
     for party in parties:
         polling_data[party] = pd.to_numeric(
-            raw_data[party].apply(
-                lambda x: x.split(' ')[0].replace(
-                    ',', '.')), errors='coerce')
+            raw_data[party].apply(parse_string), errors='coerce')
 
     polling_data = polling_data.dropna()
 
