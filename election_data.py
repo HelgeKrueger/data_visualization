@@ -32,7 +32,8 @@ class ElectionData():
                 'LINKE': 'purple'},
             title='Election Data',
             next_election_date=None,
-            filename=None):
+            filename=None,
+            results=None):
 
         self.parties = parties
         self.party_to_color = party_to_color
@@ -41,6 +42,7 @@ class ElectionData():
         self.next_election_date = next_election_date
         self.url = url
         self.title = title
+        self.results = results
 
         if filename:
             self._lazy_load(filename)
@@ -49,9 +51,11 @@ class ElectionData():
 
         self._add_statistics()
 
-
     def _load(self):
-        self.data = load_url(self.url, self.parties, date_column=self.date_column)
+        self.data = load_url(
+            self.url,
+            self.parties,
+            date_column=self.date_column)
 
         date_filter = self.data['Date'] > self.start_date
         self.data = self.data[date_filter]
@@ -98,14 +102,12 @@ class ElectionData():
         source = self.asColumnDataSource()
         figure.title.text = self.title
 
-        bands = {}
-
         for party in self.parties:
             color = self.party_to_color[party]
             figure.circle('Date', party, source=source, size=4, color=color)
             figure.line('Date', party + '_mean', source=source, color=color)
 
-            bands[party] = Band(
+            band = Band(
                 base='Date',
                 lower=party + '_low',
                 upper=party + '_up',
@@ -114,8 +116,15 @@ class ElectionData():
                 fill_alpha=0.2,
                 line_width=1,
                 fill_color=color)
+            figure.add_layout(band)
 
-            figure.add_layout(bands[party])
+            if self.results:
+                election_result = Span(
+                    location=self.results[party],
+                    dimension='width',
+                    line_color=color,
+                    line_width=2)
+                figure.add_layout(election_result)
 
         self._plot_next_election(figure)
 
