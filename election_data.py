@@ -1,4 +1,7 @@
 import pandas as pd
+import os
+
+from pathlib import Path
 
 from bokeh.models import Band, ColumnDataSource, Span
 
@@ -28,22 +31,46 @@ class ElectionData():
                 'AfD': 'blue',
                 'LINKE': 'purple'},
             title='Election Data',
-            next_election_date=None):
+            next_election_date=None,
+            filename=None):
 
         self.parties = parties
         self.party_to_color = party_to_color
         self.start_date = start_date
         self.date_column = date_column
         self.next_election_date = next_election_date
-
+        self.url = url
         self.title = title
 
-        self.data = load_url(url, parties, date_column=date_column)
+        if filename:
+            self._lazy_load(filename)
+        else:
+            self._load()
+
+        self._add_statistics()
+
+
+    def _load(self):
+        self.data = load_url(self.url, self.parties, date_column=self.date_column)
 
         date_filter = self.data['Date'] > self.start_date
         self.data = self.data[date_filter]
 
-        self._add_statistics()
+    def _lazy_load(self, filename):
+        if not filename.endswith('.csv'):
+            filename = filename + '.csv'
+        filename = os.path.join('data', filename)
+
+        file_path = Path(filename)
+
+        if file_path.is_file():
+            data = pd.read_csv(filename)
+            data['Date'] = pd.to_datetime(data['Date'])
+            data['Idx'] = pd.to_datetime(data['Idx'])
+            self.data = data.set_index('Idx').sort_index(ascending=True)
+        else:
+            self._load()
+            self.data.to_csv(filename)
 
     def add_url(self, url):
         new_data = load_url(url, self.parties, date_column=self.date_column)
