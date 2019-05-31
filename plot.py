@@ -56,10 +56,6 @@ def bundesland(
     return plot
 
 
-# bremen_plot = bundesland('https://www.wahlrecht.de/umfragen/landtage/bremen.htm',
-#                          'Bremenwahl',
-#                          ['CDU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
-#                          next_election_date=pd.to_datetime('2019-05-26'))
 brandenburg_plot = bundesland(
     'https://www.wahlrecht.de/umfragen/landtage/brandenburg.htm',
     'Brandenburg',
