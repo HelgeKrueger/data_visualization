@@ -5,7 +5,7 @@ from pathlib import Path
 
 from bokeh.models import Band, ColumnDataSource, Span
 
-from loader import load_url
+from .loader import load_url
 
 
 class ElectionData():
@@ -127,6 +127,7 @@ class ElectionData():
                 figure.add_layout(election_result)
 
         self._plot_next_election(figure)
+        self._plot_today(figure)
 
         return figure
 
@@ -140,3 +141,13 @@ class ElectionData():
 
             figure.add_layout(vline)
             figure.circle([self.next_election_date], [0])
+
+    def _plot_today(self, figure):
+        vline = Span(
+            location=pd.datetime.now(),
+            dimension='height',
+            line_color='black',
+            line_width=1,
+            line_dash='dashed')
+
+        figure.add_layout(vline)

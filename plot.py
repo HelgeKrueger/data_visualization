@@ -36,6 +36,7 @@ germany.add_url('https://www.wahlrecht.de/umfragen/politbarometer.htm')
 germany_plot = create_figure()
 germany.plot(germany_plot)
 
+
 def bundesland(
         url,
         title,
@@ -83,7 +84,7 @@ sachsen_plot = bundesland(
     next_election_date=pd.to_datetime('2019-09-01'))
 thueringen_plot = bundesland(
     'https://www.wahlrecht.de/umfragen/landtage/thueringen.htm',
-    'Sachen',
+    'Thueringen',
     [
         'CDU',
         'SPD',
