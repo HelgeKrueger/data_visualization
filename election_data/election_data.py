@@ -7,6 +7,17 @@ from bokeh.models import Band, ColumnDataSource, Span
 
 from .loader import load_url
 
+party_to_color = {
+    'CDU/CSU': 'black',
+    'CDU': 'black',
+    'CSU': 'black',
+    'SPD': 'red',
+    'GRÜNE': 'green',
+    'FDP': 'yellow',
+    'AfD': 'blue',
+    'FW': 'orange',
+    'LINKE': 'purple'}
+
 
 class ElectionData():
     def __init__(
@@ -22,16 +33,7 @@ class ElectionData():
             start_date=pd.to_datetime('2018-01-01'),
             time_period='30d',
             date_column='Datum',
-            party_to_color={
-                'CDU/CSU': 'black',
-                'CDU': 'black',
-                'CSU': 'black',
-                'SPD': 'red',
-                'GRÜNE': 'green',
-                'FDP': 'yellow',
-                'AfD': 'blue',
-                'FW': 'orange',
-                'LINKE': 'purple'},
+            party_to_color=party_to_color,
             title='Election Data',
             next_election_date=None,
             filename=None,
