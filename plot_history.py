@@ -25,7 +25,8 @@ for election in get_historic_elections():
 
 
 aggregated_diffs = pd.concat(diffs, ignore_index=True, sort=False)
-party_keys = [k for k in aggregated_diffs.keys() if k != 'election']
+party_keys = [k for k in aggregated_diffs.keys(
+) if k != 'election' and not k.endswith('_std')]
 
 plot = figure(
     plot_width=1024,
@@ -44,8 +45,28 @@ plot.title.text = 'Absolute value of election result - averaged polling'
 
 plots.append(plot)
 
-print(aggregated_diffs)
-print("-" * 50)
+print("-" * 100)
+print("Difference aggregated diff to election result")
+print("")
+print(aggregated_diffs[['election'] + party_keys])
+print("")
+
+difference = pd.DataFrame()
+difference['election'] = aggregated_diffs['election']
+for party in party_keys:
+    difference[party] = (source_df[party] -
+                         aggregated_diffs[party + '_std']).abs()
+
+print("-" * 100)
+print("Difference aggregated diff to election result adjusted to standard variation")
+print("")
+print(difference)
+print("")
+print("Number of differences > 3", (difference[party_keys] > 3).sum().sum())
+
+print("-" * 100)
+print("Maximal difference by party")
+print("")
 print(aggregated_diffs[party_keys].fillna(0).abs().max())
 
 show(column(plots))
