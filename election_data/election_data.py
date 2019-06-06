@@ -11,7 +11,7 @@ from .loader import load_url
 class ElectionData():
     def __init__(
             self,
-            url,
+            urls,
             parties=[
                 'CDU',
                 'SPD',
@@ -40,7 +40,10 @@ class ElectionData():
         self.start_date = start_date
         self.date_column = date_column
         self.next_election_date = next_election_date
-        self.url = url
+        if isinstance(urls, list):
+            self.urls = urls
+        else:
+            self.urls = [urls]
         self.title = title
         self.results = results
         self.filename = filename
@@ -54,12 +57,19 @@ class ElectionData():
 
     def _load(self):
         self.data = load_url(
-            self.url,
+            self.urls[0],
             self.parties,
             date_column=self.date_column)
 
+        for url in self.urls[1:]:
+            self.add_url(url)
+
         date_filter = self.data['Date'] > self.start_date
         self.data = self.data[date_filter]
+
+        if self.next_election_date:
+            date_filter = self.data['Date'] < self.next_election_date
+            self.data = self.data[date_filter]
 
     def _lazy_load(self, filename):
         if not filename.endswith('.csv'):
@@ -82,19 +92,14 @@ class ElectionData():
         self.data = pd.concat([self.data, new_data],
                               sort=True).sort_index(ascending=True)
 
-        date_filter = self.data['Date'] > self.start_date
-        self.data = self.data[date_filter]
-
-        self._add_statistics()
-
     def _add_statistics(self):
         for party in self.parties:
             self.data[party + '_mean'] = self.data[party].rolling('30d').mean()
             self.data[party + '_std'] = self.data[party].rolling('30d').std()
-            self.data[party + '_low'] = self.data[party +
-                                                  '_mean'] - self.data[party + '_std']
-            self.data[party + '_up'] = self.data[party +
-                                                 '_mean'] + self.data[party + '_std']
+            self.data[party + '_low'] = self.data[party + \
+                '_mean'] - self.data[party + '_std']
+            self.data[party + '_up'] = self.data[party + \
+                '_mean'] + self.data[party + '_std']
 
     def asColumnDataSource(self):
         return ColumnDataSource(self.data.reset_index())

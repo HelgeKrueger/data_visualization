@@ -11,6 +11,8 @@ pandas = "*"
 jupyter = "*"
 lxml = "*"
 bokeh = "*"
+html5lib = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3.6"

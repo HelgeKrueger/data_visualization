@@ -12,8 +12,20 @@ def create_figure():
     return figure(plot_width=1024, plot_height=600, x_axis_type="datetime")
 
 
-germany = ElectionData(
+germany_urls = [
     'https://www.wahlrecht.de/umfragen/emnid.htm',
+    'https://www.wahlrecht.de/umfragen/forsa.htm',
+    'https://www.wahlrecht.de/umfragen/allensbach.htm',
+    'https://www.wahlrecht.de/umfragen/politbarometer.htm',
+    'https://www.wahlrecht.de/umfragen/gms.htm',
+    'https://www.wahlrecht.de/umfragen/dimap.htm',
+    'https://www.wahlrecht.de/umfragen/insa.htm',
+    'https://www.wahlrecht.de/umfragen/politbarometer.htm'
+]
+
+
+germany = ElectionData(
+    germany_urls,
     title='Bundestagswahl',
     parties=[
         'CDU/CSU',
@@ -25,13 +37,6 @@ germany = ElectionData(
     date_column='Unnamed: 0',
     time_period='14d',
     next_election_date=pd.to_datetime('2021-10-01'))
-germany.add_url('https://www.wahlrecht.de/umfragen/forsa.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/allensbach.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/politbarometer.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/gms.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/dimap.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/insa.htm')
-germany.add_url('https://www.wahlrecht.de/umfragen/politbarometer.htm')
 
 germany_plot = create_figure()
 germany.plot(germany_plot)

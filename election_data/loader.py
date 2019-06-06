@@ -7,13 +7,15 @@ def parse_string(string):
     if isinstance(string, str):
         return string.split(' ')[0].replace(',', '.')
 
+    print(string)
+
     return string
 
 
 def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     print("Loading ... ", url)
     start_time = time.time()
-    data = pd.read_html(url)
+    data = pd.read_html(url, decimal=',', thousands='#')
     raw_data = data[1]
     raw_keys = raw_data.keys()
 
@@ -41,5 +43,7 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     polling_data['Idx'] = polling_data['Date']
     polling_data = polling_data.set_index('Idx').sort_index(ascending=True)
     print("Done in ", time.time() - start_time, " ms")
+
+    polling_data['url'] = url
 
     return polling_data
