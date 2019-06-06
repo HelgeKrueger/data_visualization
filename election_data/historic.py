@@ -35,12 +35,49 @@ def get_bremen_election_2019(filename):
             'AfD': 6.1})
 
 
+def get_bayern_election_2018(filename):
+    return ElectionData(
+        'https://www.wahlrecht.de/umfragen/landtage/bayern.htm',
+        title='Bayernwahl 2018',
+        parties=['CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'FW', 'AfD'],
+        next_election_date=pd.to_datetime('2018-10-14'),
+        start_date=pd.to_datetime('2013-09-16'),
+        time_period='30d',
+        filename=filename,
+        results={
+            'CSU': 37.2,
+            'SPD': 9.7,
+            'GRÜNE': 17.6,
+            'FDP': 5.1,
+            'LINKE': 3.2,
+            'FW': 11.6,
+            'AfD': 10.2})
+
+
+def get_hessen_election_2018(filename):
+    return ElectionData(
+        'https://www.wahlrecht.de/umfragen/landtage/hessen.htm',
+        title='Hessenwahl 2018',
+        parties=['CDU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
+        next_election_date=pd.to_datetime('2018-10-28'),
+        start_date=pd.to_datetime('2013-09-23'),
+        time_period='30d',
+        filename=filename,
+        results={
+            'CDU': 27.0,
+            'SPD': 19.8,
+            'GRÜNE': 19.8,
+            'FDP': 7.5,
+            'LINKE': 6.3,
+            'AfD': 13.1})
+
+
 def get_germany_election_2017(filename):
     return ElectionData([
         'https://www.wahlrecht.de/umfragen/emnid.htm',
         'https://www.wahlrecht.de/umfragen/forsa.htm',
         'https://www.wahlrecht.de/umfragen/allensbach.htm',
-        'https://www.wahlrecht.de/umfragen/politbarometer.htm',
+        'https://www.wahlrecht.de/umfragen/yougov.htm',
         'https://www.wahlrecht.de/umfragen/gms.htm',
         'https://www.wahlrecht.de/umfragen/dimap.htm',
         'https://www.wahlrecht.de/umfragen/insa.htm',
@@ -62,10 +99,40 @@ def get_germany_election_2017(filename):
     })
 
 
+def get_germany_election_2013(filename):
+    return ElectionData([
+        'https://www.wahlrecht.de/umfragen/emnid/2013.htm',
+        'https://www.wahlrecht.de/umfragen/forsa/2013.htm',
+        'https://www.wahlrecht.de/umfragen/allensbach/2013.htm',
+        'https://www.wahlrecht.de/umfragen/gms.htm',
+        'https://www.wahlrecht.de/umfragen/dimap/2013.htm',
+        'https://www.wahlrecht.de/umfragen/insa.htm',
+        'https://www.wahlrecht.de/umfragen/yougov.htm',
+        'https://www.wahlrecht.de/umfragen/politbarometer/politbarometer-2013.htm'],
+        title='Bundestagswahl 2013',
+        parties=['CDU/CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
+        date_column='Unnamed: 0',
+        time_period='14d',
+        next_election_date=pd.to_datetime('2013-09-22'),
+        start_date=pd.to_datetime('2009-09-28'),
+        filename=filename,
+        results={
+        'CDU/CSU': 41.5,
+        'SPD': 25.7,
+        'GRÜNE': 8.4,
+        'FDP': 4.8,
+        'LINKE': 8.6,
+        'AfD': 4.7
+    })
+
+
 filename_to_election_data_map = {
     '20190526_europa': get_european_election_2019,
+    '20181014_bayern': get_bayern_election_2018,
     '20190526_bremen': get_bremen_election_2019,
+    '20181028_hessen': get_hessen_election_2018,
     '20170924_germany': get_germany_election_2017,
+    '20130922_germany': get_germany_election_2013,
 }
 
 
