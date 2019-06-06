@@ -43,6 +43,7 @@ class ElectionData():
         self.url = url
         self.title = title
         self.results = results
+        self.filename = filename
 
         if filename:
             self._lazy_load(filename)
@@ -151,3 +152,13 @@ class ElectionData():
             line_dash='dashed')
 
         figure.add_layout(vline)
+
+    def _get_last_mean(self, party):
+        return self.data.tail(1)[party + '_mean'].tolist()[0]
+
+    def compute_diff_to_election_as_dataframe(self):
+        diff = {'election': self.filename}
+        for party in self.parties:
+            diff[party] = [self.results[party] - self._get_last_mean(party)]
+
+        return pd.DataFrame.from_dict(diff)
