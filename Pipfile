@@ -13,6 +13,7 @@ lxml = "*"
 bokeh = "*"
 html5lib = "*"
 beautifulsoup4 = "*"
+tweepy = "*"
 
 [requires]
 python_version = "3.6"
