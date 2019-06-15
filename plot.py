@@ -74,7 +74,7 @@ brandenburg_plot = bundesland(
     next_election_date=pd.to_datetime('2019-09-01'))
 sachsen_plot = bundesland(
     'https://www.wahlrecht.de/umfragen/landtage/sachsen.htm',
-    'Sachen',
+    'Sachsen',
     [
         'CDU',
         'SPD',
