@@ -13,7 +13,7 @@ class Twitter:
         print("Please open the following url in a webbrowser and allow access")
         print(redirect_url)
 
-        verify = raw_input("Please enter the token: ")
+        verify = input("Please enter the token: ")
 
         self.oauth.get_access_token(verify)
 

@@ -5,6 +5,12 @@ from pathlib import Path
 
 from bokeh.models import Band, ColumnDataSource, Span
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
+import seaborn as sns
+
 from .loader import load_url
 
 party_to_color = {
@@ -44,6 +50,7 @@ class ElectionData():
         self.start_date = start_date
         self.date_column = date_column
         self.next_election_date = next_election_date
+        self.time_period = time_period
         if isinstance(urls, list):
             self.urls = urls
         else:
@@ -98,8 +105,9 @@ class ElectionData():
 
     def _add_statistics(self):
         for party in self.parties:
-            self.data[party + '_mean'] = self.data[party].rolling('30d').mean()
-            self.data[party + '_std'] = self.data[party].rolling('30d').std()
+            rolling = self.data[party].rolling(self.time_period)
+            self.data[party + '_mean'] = rolling.mean()
+            self.data[party + '_std'] = rolling.std()
             self.data[party + '_low'] = self.data[party + \
                 '_mean'] - self.data[party + '_std']
             self.data[party + '_up'] = self.data[party + \
@@ -108,13 +116,26 @@ class ElectionData():
     def asColumnDataSource(self):
         return ColumnDataSource(self.data.reset_index())
 
+    def plot_to_file(self, filename):
+        plt.title(self.title)
+
+        for party in self.parties:
+            plt.plot(self.data['Date'], self.data[party], 'o', color=party_to_color[party], alpha=0.2)
+            plt.plot(self.data['Date'], self.data[party + '_mean'], '-', color=party_to_color[party])
+
+        if self.next_election_date:
+            plt.axvline(x=self.next_election_date)
+
+        plt.savefig(filename)
+
+
     def plot(self, figure):
         source = self.asColumnDataSource()
         figure.title.text = self.title
 
         for party in self.parties:
             color = self.party_to_color[party]
-            figure.circle('Date', party, source=source, size=4, color=color)
+            figure.circle('Date', party, source=source, size=4, color=color, alpha=0.1)
             figure.line('Date', party + '_mean', source=source, color=color)
 
             band = Band(
