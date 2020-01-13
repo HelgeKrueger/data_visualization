@@ -1,31 +1,17 @@
-import argparse
 import pandas as pd
 import argparse
 import sys
 from subprocess import call
 
-from election_data import ElectionData
+from election_data import CurrentElections
 from apiio import Twitter
 
 parser = argparse.ArgumentParser('')
 parser.add_argument('--notweet', action='store_true')
 args = parser.parse_args()
 
+data = CurrentElections.hamburg()
 
-data = ElectionData(
-    'https://www.wahlrecht.de/umfragen/landtage/hamburg.htm',
-    title="Umfragen zur Bürgerschaftswahl in Hamburg",
-    parties=['CDU',
-             'SPD',
-             'GRÜNE',
-             'FDP',
-             'LINKE',
-             'AfD'],
-    next_election_date=pd.to_datetime('2020-02-23'),
-    start_date=pd.to_datetime('2019-01-01'),
-    filename="tmp_hamburg"
-)
-# start_date=pd.to_datetime('2015-02-16')
 
 if not data.refresh():
     print("no new data")

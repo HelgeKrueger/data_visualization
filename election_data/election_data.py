@@ -69,7 +69,7 @@ class ElectionData():
             date_column=self.date_column)
 
         for url in self.urls[1:]:
-            add_url(url)
+            data = self.add_url(url, data)
 
         date_filter = data['Date'] > self.start_date
         data = data[date_filter]
@@ -102,10 +102,11 @@ class ElectionData():
     def save(self, filename):
         self.data.to_csv(filename)
 
-    def add_url(self, url):
+    def add_url(self, url, data):
         new_data = load_url(url, self.parties, date_column=self.date_column)
-        self.data = pd.concat([self.data, new_data],
+        data = pd.concat([data, new_data],
                               sort=True).sort_index(ascending=True)
+        return data
 
     def _add_statistics(self):
         for party in self.parties:
