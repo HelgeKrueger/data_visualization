@@ -1,9 +1,6 @@
 import os
 import tweepy
 
-
-
-
 class Twitter:
     def __init__(self):
         self.oauth = tweepy.OAuthHandler(os.environ['TWITTER_API_KEY'], os.environ['TWITTER_API_SECRET_KEY'])
@@ -33,4 +30,9 @@ class Twitter:
             self.api.update_with_media(filename)
 
     def timeline(self, username):
-        return self.api.user_timeline(username)
+        def convert_status(status):
+            return {
+                'text': status.text,
+                'date': status.created_at
+            }
+        return list(map(convert_status, self.api.user_timeline(username)))
