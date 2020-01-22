@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sys
 
 from pathlib import Path
 
@@ -53,14 +54,19 @@ class ElectionData():
 
     def refresh(self):
         data = self._load()
+        last_row_old = self.data.tail(1).iloc[0]
+        last_row_new = data.tail(1).iloc[0]
 
-        if len(data) == len(self.data):
+        print(last_row_old)
+        print(last_row_new)
+
+        if len(data) == len(self.data) and last_row_old['Date'] == last_row_new['Date']:
             return False
 
         self.data = data
         self.save(self._build_filename(self.filename))
 
-        return
+        return True
 
     def _load(self):
         data = load_url(

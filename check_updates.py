@@ -25,7 +25,7 @@ if not is_new:
     sys.exit(1)
 
 print("New entry")
-print(status_list[0].text)
+print(status_list.data.iloc[0].text)
 print()
 print('*' * 70)
 

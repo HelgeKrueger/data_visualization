@@ -9,7 +9,6 @@ class CurrentElections:
             'https://www.wahlrecht.de/umfragen/emnid.htm',
             'https://www.wahlrecht.de/umfragen/forsa.htm',
             'https://www.wahlrecht.de/umfragen/allensbach.htm',
-            'https://www.wahlrecht.de/umfragen/politbarometer.htm',
             'https://www.wahlrecht.de/umfragen/gms.htm',
             'https://www.wahlrecht.de/umfragen/dimap.htm',
             'https://www.wahlrecht.de/umfragen/insa.htm',
