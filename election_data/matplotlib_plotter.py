@@ -28,6 +28,7 @@ class MatplotlibPlotter:
             plt.axvline(x=self.election_data.next_election_date)
 
         plt.legend(loc='upper left')
+        plt.ylim(0, None)
 
         plt.savefig(filename, bbox_inches='tight')
 

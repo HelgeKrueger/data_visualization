@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 import sys
-from subprocess import call
+from subprocess import Popen
 
 from election_data import CurrentElections
 from apiio import Twitter
@@ -10,6 +10,7 @@ from lib import build_status
 parser = argparse.ArgumentParser('')
 parser.add_argument('--election', default='germany')
 parser.add_argument('--notweet', action='store_true')
+parser.add_argument('--ignore_update', action='store_true')
 args = parser.parse_args()
 
 election = args.election
@@ -28,7 +29,7 @@ print()
 print("Processing election for", election)
 print()
 
-if not data.refresh():
+if not args.ignore_update and not data.refresh():
     print("no new data")
     sys.exit(1)
 
@@ -38,7 +39,7 @@ data.plot_to_file(filename)
 last_row = data.get_last().iloc[0]
 
 if args.notweet:
-    call(["xdg-open", filename])
+    Popen("xdg-open {}".format(filename), shell=True)
 
 if not args.notweet:
     twitter = Twitter()
