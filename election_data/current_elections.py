@@ -2,6 +2,7 @@ import pandas as pd
 
 from .election_data import ElectionData
 
+
 class CurrentElections:
     @staticmethod
     def germany():

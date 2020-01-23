@@ -1,11 +1,12 @@
 import os
 import tweepy
 
+
 class Twitter:
     def __init__(self):
         self.oauth = tweepy.OAuthHandler(os.environ['TWITTER_API_KEY'], os.environ['TWITTER_API_SECRET_KEY'])
 
-        if 'TWITTER_ACCESS_TOKEN' in os.environ: 
+        if 'TWITTER_ACCESS_TOKEN' in os.environ:
             self.oauth.access_token = os.environ['TWITTER_ACCESS_TOKEN']
         if 'TWITTER_ACCESS_TOKEN_SECRET' in os.environ:
             self.oauth.access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']

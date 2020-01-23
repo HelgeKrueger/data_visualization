@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 
+
 class StatusList:
     def __init__(self, filename='data/wahlrecht_twitter.csv'):
         self.filename = filename
@@ -28,11 +29,9 @@ class StatusList:
         self.append_entry(username, status)
         return True
 
-
     def append_entry(self, username, status):
         self.data = self.data.append({
             'username': username,
             'text': status['text'],
             'date': status['date']
         }, ignore_index=True)
-

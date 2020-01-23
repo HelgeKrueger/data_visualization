@@ -8,4 +8,3 @@ party_to_color = {
     'AfD': 'blue',
     'FW': 'orange',
     'LINKE': 'purple'}
-

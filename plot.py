@@ -1,4 +1,3 @@
-import pandas as pd
 import argparse
 import sys
 from subprocess import Popen
@@ -20,7 +19,7 @@ if election == 'germany':
     data = CurrentElections.germany()
 elif election == 'hamburg':
     data = CurrentElections.hamburg()
-    tags=['#HHWahl', '#ltwhh']
+    tags = ['#HHWahl', '#ltwhh']
 else:
     print("Unknown election ", election)
     sys.exit(1)

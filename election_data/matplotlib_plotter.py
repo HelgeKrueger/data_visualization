@@ -1,11 +1,13 @@
 import pandas as pd
 
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-matplotlib.style.use('ggplot')
 
 from .constants import party_to_color
+
+matplotlib.use('Agg')
+matplotlib.style.use('ggplot')
+
 
 class MatplotlibPlotter:
     def __init__(self, election_data):
@@ -18,7 +20,6 @@ class MatplotlibPlotter:
 
         for party in self.election_data.parties:
             plt.plot(self.election_data.data['Date'], self.election_data.data[party], 'o', color=party_to_color[party], alpha=0.1)
-            
 
             # line, = plt.plot(self.election_data.data['Date'], self.election_data.data[party + '_mean'], '-', color=party_to_color[party])
             line, = plt.plot(smoothed['Date'], smoothed[party], '-', color=party_to_color[party])

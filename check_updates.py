@@ -1,5 +1,3 @@
-import os
-import pandas as pd
 import sys
 
 from apiio import Twitter, StatusList
@@ -34,10 +32,10 @@ status_list.save()
 for election in ['germany', 'hamburg']:
     if election == 'germany':
         data = CurrentElections.germany()
-        tags=['#btw', '#btw21']
+        tags = ['#btw', '#btw21']
     elif election == 'hamburg':
         data = CurrentElections.hamburg()
-        tags=['#HHWahl', '#ltwhh']
+        tags = ['#HHWahl', '#ltwhh']
     else:
         print("Unknown election ", election)
         sys.exit(1)

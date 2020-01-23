@@ -17,9 +17,10 @@ tweepy = "*"
 matplotlib = "*"
 pytest = "*"
 seaborn = "*"
+flake8 = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
 
 [scripts]
 format = "autopep8 --in-place --aggressive --aggressive -r"

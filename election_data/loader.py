@@ -11,6 +11,7 @@ def parse_string(string):
 
     return string
 
+
 def get_pollster_from_url(url):
     m = re.search(r'/(\w+)\.htm', url)
     if not m:
@@ -50,8 +51,6 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
         pollster = get_pollster_from_url(url)
         if pollster:
             polling_data['pollster'] = pollster
-
-
 
     polling_data = polling_data.dropna()
 

@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import sys
 
 from pathlib import Path
 
@@ -111,8 +110,7 @@ class ElectionData():
 
     def add_url(self, url, data):
         new_data = load_url(url, self.parties, date_column=self.date_column)
-        data = pd.concat([data, new_data],
-                              sort=True).sort_index(ascending=True)
+        data = pd.concat([data, new_data], sort=True).sort_index(ascending=True)
         return data
 
     def _add_statistics(self):
@@ -120,10 +118,8 @@ class ElectionData():
             rolling = self.data[party].rolling(self.time_period)
             self.data[party + '_mean'] = rolling.mean()
             self.data[party + '_std'] = rolling.std()
-            self.data[party + '_low'] = self.data[party + \
-                '_mean'] - self.data[party + '_std']
-            self.data[party + '_up'] = self.data[party + \
-                '_mean'] + self.data[party + '_std']
+            self.data[party + '_low'] = self.data[party + '_mean'] - self.data[party + '_std']
+            self.data[party + '_up'] = self.data[party + '_mean'] + self.data[party + '_std']
 
     def asColumnDataSource(self):
         return ColumnDataSource(self.data.reset_index())
