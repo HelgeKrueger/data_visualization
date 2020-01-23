@@ -65,6 +65,7 @@ class ElectionData():
 
         self.data = data
         self.save(self._build_filename(self.filename))
+        self._add_statistics()
 
         return True
 

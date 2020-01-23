@@ -34,6 +34,7 @@ status_list.save()
 for election in ['germany', 'hamburg']:
     if election == 'germany':
         data = CurrentElections.germany()
+        tags=['#btw', '#btw21']
     elif election == 'hamburg':
         data = CurrentElections.hamburg()
         tags=['#HHWahl', '#ltwhh']
