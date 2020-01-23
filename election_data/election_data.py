@@ -5,24 +5,9 @@ from pathlib import Path
 
 from bokeh.models import Band, ColumnDataSource, Span
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-matplotlib.style.use('ggplot')
-import seaborn as sns
-
 from .loader import load_url
-
-party_to_color = {
-    'CDU/CSU': 'black',
-    'CDU': 'black',
-    'CSU': 'black',
-    'SPD': 'red',
-    'GRÜNE': 'green',
-    'FDP': 'yellow',
-    'AfD': 'blue',
-    'FW': 'orange',
-    'LINKE': 'purple'}
+from .matplotlib_plotter import MatplotlibPlotter
+from .constants import party_to_color
 
 
 class ElectionData():
@@ -62,30 +47,41 @@ class ElectionData():
         if filename:
             self._lazy_load(filename)
         else:
-            self._load()
+            self.data = self._load()
 
         self._add_statistics()
 
+    def refresh(self):
+        data = self._load()
+
+        if len(data) == len(self.data):
+            return False
+
+        self.data = data
+        self.save(self._build_filename(self.filename))
+
+        return
+
     def _load(self):
-        self.data = load_url(
+        data = load_url(
             self.urls[0],
             self.parties,
             date_column=self.date_column)
 
         for url in self.urls[1:]:
-            self.add_url(url)
+            add_url(url)
 
-        date_filter = self.data['Date'] > self.start_date
-        self.data = self.data[date_filter]
+        date_filter = data['Date'] > self.start_date
+        data = data[date_filter]
 
         if self.next_election_date:
-            date_filter = self.data['Date'] < self.next_election_date
-            self.data = self.data[date_filter]
+            date_filter = data['Date'] < self.next_election_date
+            data = data[date_filter]
+
+        return data
 
     def _lazy_load(self, filename):
-        if not filename.endswith('.csv'):
-            filename = filename + '.csv'
-        filename = os.path.join('data', filename)
+        filename = self._build_filename(filename)
 
         file_path = Path(filename)
 
@@ -95,8 +91,16 @@ class ElectionData():
             data['Idx'] = pd.to_datetime(data['Idx'])
             self.data = data.set_index('Idx').sort_index(ascending=True)
         else:
-            self._load()
-            self.data.to_csv(filename)
+            self.data = self._load()
+            self.save(filename)
+
+    def _build_filename(self, filename):
+        if not filename.endswith('.csv'):
+            filename = filename + '.csv'
+        return os.path.join('data', filename)
+
+    def save(self, filename):
+        self.data.to_csv(filename)
 
     def add_url(self, url):
         new_data = load_url(url, self.parties, date_column=self.date_column)
@@ -117,17 +121,8 @@ class ElectionData():
         return ColumnDataSource(self.data.reset_index())
 
     def plot_to_file(self, filename):
-        plt.title(self.title)
-
-        for party in self.parties:
-            plt.plot(self.data['Date'], self.data[party], 'o', color=party_to_color[party], alpha=0.2)
-            plt.plot(self.data['Date'], self.data[party + '_mean'], '-', color=party_to_color[party])
-
-        if self.next_election_date:
-            plt.axvline(x=self.next_election_date)
-
-        plt.savefig(filename)
-
+        plotter = MatplotlibPlotter(self)
+        plotter.plot(filename)
 
     def plot(self, figure):
         source = self.asColumnDataSource()
@@ -184,10 +179,13 @@ class ElectionData():
         figure.add_layout(vline)
 
     def _get_last_mean(self, party):
-        return self.data.tail(1)[party + '_mean'].tolist()[0]
+        return self.get_last()[party + '_mean'].tolist()[0]
 
     def _get_last_std(self, party):
-        return self.data.tail(1)[party + '_std'].tolist()[0]
+        return self.get_last()[party + '_std'].tolist()[0]
+
+    def get_last(self):
+        return self.data.tail(1)
 
     def compute_diff_to_election_as_dataframe(self):
         diff = {'election': self.filename}

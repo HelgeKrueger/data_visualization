@@ -1,5 +1,5 @@
 import pandas as pd
-
+import re
 import time
 
 
@@ -10,6 +10,12 @@ def parse_string(string):
     print(string)
 
     return string
+
+def get_pollster_from_url(url):
+    m = re.search(r'/(\w+)\.htm', url)
+    if not m:
+        return
+    return m.group(1)
 
 
 def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
@@ -37,6 +43,15 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     for party in parties:
         polling_data[party] = pd.to_numeric(
             raw_data[party].apply(parse_string), errors='coerce')
+
+    if 'Auftraggeber' in raw_data:
+        polling_data['pollster'] = raw_data['Auftraggeber']
+    else:
+        pollster = get_pollster_from_url(url)
+        if pollster:
+            polling_data['pollster'] = pollster
+
+
 
     polling_data = polling_data.dropna()
 

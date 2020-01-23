@@ -1,9 +1,20 @@
 import pandas as pd
+import argparse
+from subprocess import call
+import sys
+import os
 
 from bokeh.plotting import figure, output_file, show
 from bokeh.layouts import column
+from bokeh.io import export_png
 
 from election_data import ElectionData
+
+from apiio import Twitter
+
+parser = argparse.ArgumentParser('')
+parser.add_argument('--notweet', action='store_true')
+args = parser.parse_args()
 
 output_file('output/election.html')
 
@@ -23,6 +34,7 @@ germany_urls = [
     'https://www.wahlrecht.de/umfragen/politbarometer.htm'
 ]
 
+tmp_filename = 'tmp_germany.csv'
 
 germany = ElectionData(
     germany_urls,
@@ -38,62 +50,51 @@ germany = ElectionData(
     time_period='14d',
     next_election_date=pd.to_datetime('2021-10-01'))
 
-germany_plot = create_figure()
-germany.plot(germany_plot)
-
-
-def bundesland(
-        url,
-        title,
-        parties,
-        next_election_date=None,
-        time_period='30d'):
-    data = ElectionData(
-        url,
-        title=title,
-        parties=parties,
-        next_election_date=next_election_date,
-        time_period=time_period)
-
-    plot = create_figure()
-    data.plot(plot)
-
-    return plot
-
-
-brandenburg_plot = bundesland(
-    'https://www.wahlrecht.de/umfragen/landtage/brandenburg.htm',
-    'Brandenburg',
-    [
-        'CDU',
+germany_old = ElectionData(
+    germany_urls,
+    title='Bundestagswahl',
+    parties=[
+        'CDU/CSU',
         'SPD',
         'GRÜNE',
         'FDP',
         'LINKE',
         'AfD'],
-    next_election_date=pd.to_datetime('2019-09-01'))
-sachsen_plot = bundesland(
-    'https://www.wahlrecht.de/umfragen/landtage/sachsen.htm',
-    'Sachsen',
-    [
-        'CDU',
-        'SPD',
-        'GRÜNE',
-        'FDP',
-        'LINKE',
-        'AfD'],
-    next_election_date=pd.to_datetime('2019-09-01'))
-thueringen_plot = bundesland(
-    'https://www.wahlrecht.de/umfragen/landtage/thueringen.htm',
-    'Thueringen',
-    [
-        'CDU',
-        'SPD',
-        'GRÜNE',
-        'FDP',
-        'LINKE',
-        'AfD'],
-    next_election_date=pd.to_datetime('2019-10-27'))
+    date_column='Unnamed: 0',
+    time_period='14d',
+    next_election_date=pd.to_datetime('2021-10-01'),
+    filename=tmp_filename)
+
+if len(germany.data) == len(germany_old.data):
+    print("")
+    print("-" * 80)
+    print("No new data")
+    sys.exit(1)
+
+germany.save(os.join('data', tmp_filename))
+
+filename = 'germany.png'
+germany.plot_to_file(filename)
 
 
-show(column(germany_plot, brandenburg_plot, sachsen_plot, thueringen_plot))
+last_row = germany.get_last().iloc[0]
+
+
+def build_status(row):
+    date = row['Date'].to_pydatetime().strftime("%d.%m.%Y")
+    pollster = row['pollster']
+    url = row['url']
+    return "Letzte Umfrage von {} am {}. Daten von {}.".format(pollster, date, url)
+
+
+print(build_status(last_row))
+
+if args.notweet:
+    call(["xdg-open", filename])
+
+if not args.notweet:
+    twitter = Twitter()
+    twitter.auth()
+
+    twitter.post_file(filename, status=build_status(last_row))
+
