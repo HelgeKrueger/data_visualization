@@ -7,8 +7,6 @@ def parse_string(string):
     if isinstance(string, str):
         return string.split(' ')[0].replace(',', '.')
 
-    print(string)
-
     return string
 
 

@@ -56,9 +56,6 @@ class ElectionData():
         last_row_old = self.data.tail(1).iloc[0]
         last_row_new = data.tail(1).iloc[0]
 
-        print(last_row_old)
-        print(last_row_new)
-
         if len(data) == len(self.data) and last_row_old['Date'] == last_row_new['Date']:
             return False
 
