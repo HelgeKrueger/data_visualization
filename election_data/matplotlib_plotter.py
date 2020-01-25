@@ -1,5 +1,3 @@
-import pandas as pd
-
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -16,7 +14,7 @@ class MatplotlibPlotter:
     def plot(self, filename):
         plt.title(self.election_data.title)
 
-        smoothed = self.build_line_data()
+        smoothed = self.election_data.smoothed_daily_data()
 
         for party in self.election_data.parties:
             plt.plot(self.election_data.data['Date'], self.election_data.data[party], 'o', color=party_to_color[party], alpha=0.1)
@@ -32,22 +30,3 @@ class MatplotlibPlotter:
         plt.ylim(0, None)
 
         plt.savefig(filename, bbox_inches='tight')
-
-    def build_line_data(self):
-        df = self.election_data.data.copy()
-        df = df[~df.index.duplicated()]
-        min_date = df['Date'].min()
-        max_date = df['Date'].max()
-
-        index_daily = pd.date_range(min_date, max_date, freq='1D')
-        df = df.reindex(index=index_daily).interpolate('linear')
-
-        result = pd.DataFrame()
-        result['Date'] = df.index
-        result['Idx'] = df.index
-        result = result.set_index('Idx').sort_index(ascending=True)
-
-        for party in self.election_data.parties:
-            result[party] = df[party + '_mean'].rolling('14d').mean()
-
-        return result

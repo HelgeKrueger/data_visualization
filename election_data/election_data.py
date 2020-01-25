@@ -195,3 +195,22 @@ class ElectionData():
             diff[party + '_std'] = self._get_last_std(party)
 
         return pd.DataFrame.from_dict(diff)
+
+    def smoothed_daily_data(self):
+        df = self.data.copy()
+        df = df[~df.index.duplicated()]
+        min_date = df['Date'].min()
+        max_date = df['Date'].max()
+
+        index_daily = pd.date_range(min_date, max_date, freq='1D')
+        df = df.reindex(index=index_daily).interpolate('linear')
+
+        result = pd.DataFrame()
+        result['Date'] = df.index
+        result['Idx'] = df.index
+        result = result.set_index('Idx').sort_index(ascending=True)
+
+        for party in self.parties:
+            result[party] = df[party + '_mean'].rolling('14d').mean()
+
+        return result
