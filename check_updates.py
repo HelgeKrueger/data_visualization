@@ -47,7 +47,7 @@ for election in ['germany', 'hamburg']:
     if not data.refresh():
         print("no new data for", election)
     else:
-        filename = 'tmp.png'
+        filename = 'output/tmp.png'
         data.plot_to_file(filename)
         last_row = data.get_last().iloc[0]
 
