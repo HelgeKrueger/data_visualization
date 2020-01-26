@@ -100,7 +100,11 @@ class ElectionData():
     def _build_filename(self, filename):
         if not filename.endswith('.csv'):
             filename = filename + '.csv'
-        return os.path.join('data', filename)
+
+        if os.path.exists('data'):
+            return os.path.join('data', filename)
+        else:
+            return filename
 
     def save(self, filename):
         self.data.to_csv(filename)
