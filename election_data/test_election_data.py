@@ -8,3 +8,11 @@ def test_smoothed_daily_data():
 
     assert len(result) > 1000
     assert list(result.columns) == ['Date', 'CDU/CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD']
+
+
+def test_smoothed_daily_data_2013():
+    data = get_historic_election_data('20130922_germany')
+
+    result = data.smoothed_daily_data()
+
+    assert len(result) > 1000

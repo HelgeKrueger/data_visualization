@@ -40,8 +40,11 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
         errors='coerce',
         format=date_format)
     for party in parties:
-        polling_data[party] = pd.to_numeric(
-            raw_data[party].apply(parse_string), errors='coerce')
+        if party in raw_data.columns:
+            polling_data[party] = pd.to_numeric(
+                raw_data[party].apply(parse_string), errors='coerce')
+        else:
+            polling_data[party] = 0
 
     if 'Auftraggeber' in raw_data:
         polling_data['pollster'] = raw_data['Auftraggeber']
@@ -50,7 +53,9 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
         if pollster:
             polling_data['pollster'] = pollster
 
-    polling_data = polling_data.dropna()
+    polling_data = polling_data.fillna(0)
+    polling_filter = polling_data['Date'] != 0
+    polling_data = polling_data[polling_filter]
 
     polling_data['Idx'] = polling_data['Date']
     polling_data = polling_data.set_index('Idx').sort_index(ascending=True)
