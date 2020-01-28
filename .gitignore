@@ -3,3 +3,5 @@ output
 data
 *.swp
 .env
+.idea
+.vscode
