@@ -147,7 +147,7 @@ def get_germany_election_2009(filename):
         'https://www.wahlrecht.de/umfragen/dimap/2007.htm',
         'https://www.wahlrecht.de/umfragen/dimap/2006.htm',
         'https://www.wahlrecht.de/umfragen/dimap/2005.htm'
-        ],
+    ],
         title='Bundestagswahl 2009',
         parties=['CDU/CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD'],
         date_column='Unnamed: 0',

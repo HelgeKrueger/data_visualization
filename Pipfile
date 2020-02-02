@@ -19,6 +19,7 @@ beautifulsoup4 = "*"
 tweepy = "*"
 matplotlib = "*"
 seaborn = "*"
+sklearn = "*"
 
 [requires]
 python_version = "3.7"
