@@ -27,6 +27,13 @@ def extract_german_date(text):
     if not isinstance(text, str):
         return text
 
+    m = re.search(r'(\d{1,2}).(\d{1,2}).(\d{4})', text, re.UNICODE)
+    if m:
+        year = int(m.group(3))
+        month = int(m.group(2))
+        day = int(m.group(1))
+        return f"{year:04}-{month:02}-{day:02}"
+
     m = re.search(r'(\d{1,2}).\s*(\w+)\s*(\d{4})', text, re.UNICODE)
     if not m:
         return text
