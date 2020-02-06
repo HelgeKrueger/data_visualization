@@ -185,10 +185,13 @@ def get_historic_elections():
     return keys
 
 
-def get_germany_result(date):
-    date = pd.to_datetime(date)
-    for key in filename_to_election_data_map:
-        if key.endswith('_germany'):
-            data = get_historic_election_data(key).smoothed_daily_data()
-            if date in data['Date']:
-                return data.loc[date]
+class GermanyElectionResultLookup():
+    def __init__(self):
+        keys = [k for k in get_historic_elections() if k.endswith('_germany')]
+        dfs = [get_historic_election_data(k).smoothed_daily_data() for k in keys]
+
+        self.data = pd.concat(dfs)
+
+    def lookup(self, date):
+        if date in self.data['Date']:
+            return self.data.loc[date]
