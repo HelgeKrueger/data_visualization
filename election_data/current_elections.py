@@ -1,6 +1,21 @@
 import pandas as pd
+import sys
 
 from .election_data import ElectionData
+
+
+def get_current_election_for_name(name):
+    if name == 'germany':
+        data = CurrentElections.germany()
+        tags = ['#btw', '#btw21']
+    elif name == 'hamburg':
+        data = CurrentElections.hamburg()
+        tags = ['#HHWahl', '#ltwhh']
+    else:
+        print("Unknown election ", name)
+        sys.exit(1)
+
+    return data, tags
 
 
 class CurrentElections:

@@ -2,7 +2,7 @@ import argparse
 import sys
 from subprocess import Popen
 
-from election_data import CurrentElections
+from election_data import get_current_election_for_name
 from apiio import Twitter
 from lib import build_status
 
@@ -12,27 +12,18 @@ parser.add_argument('--notweet', action='store_true')
 parser.add_argument('--ignore_update', action='store_true')
 args = parser.parse_args()
 
-election = args.election
-tags = []
 
-if election == 'germany':
-    data = CurrentElections.germany()
-elif election == 'hamburg':
-    data = CurrentElections.hamburg()
-    tags = ['#HHWahl', '#ltwhh']
-else:
-    print("Unknown election ", election)
-    sys.exit(1)
+data, tags = get_current_election_for_name(args.election)
 
 print()
-print("Processing election for", election)
+print("Processing election for", args.election)
 print()
 
 if not args.ignore_update and not data.refresh():
     print("no new data")
     sys.exit(1)
 
-filename = 'tmp.png'
+filename = 'output/tmp.png'
 
 data.plot_to_file(filename)
 last_row = data.get_last().iloc[0]

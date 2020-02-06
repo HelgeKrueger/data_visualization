@@ -20,6 +20,7 @@ tweepy = "*"
 matplotlib = "*"
 seaborn = "*"
 sklearn = "*"
+tabulate = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,7 +1,7 @@
 import sys
 
 from apiio import Twitter, StatusList
-from election_data import CurrentElections
+from election_data import get_current_election_for_name
 from lib import build_status
 
 username = '@wahlrecht_de'
@@ -30,15 +30,7 @@ print('*' * 70)
 status_list.save()
 
 for election in ['germany', 'hamburg']:
-    if election == 'germany':
-        data = CurrentElections.germany()
-        tags = ['#btw', '#btw21']
-    elif election == 'hamburg':
-        data = CurrentElections.hamburg()
-        tags = ['#HHWahl', '#ltwhh']
-    else:
-        print("Unknown election ", election)
-        sys.exit(1)
+    data, tags = get_current_election_for_name(election)
 
     print()
     print("Processing election for", election)
