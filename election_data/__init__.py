@@ -1,4 +1,4 @@
 from .election_data import ElectionData, party_to_color
 from .historic import get_historic_election_data, get_historic_elections, GermanyElectionResultLookup
-from .current_elections import get_current_election_for_name
+from .current_elections import get_current_election_for_name, available_current_elections
 from .germany_by_region import german_national_polls_by_region

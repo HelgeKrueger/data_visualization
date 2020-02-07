@@ -2,12 +2,12 @@ import argparse
 import sys
 from subprocess import Popen
 
-from election_data import get_current_election_for_name
+from election_data import get_current_election_for_name, available_current_elections
 from apiio import Twitter
 from lib import build_status
 
 parser = argparse.ArgumentParser('')
-parser.add_argument('--election', default='germany')
+parser.add_argument('--election', default='germany', help="Available elections: " + ", ".join(available_current_elections))
 parser.add_argument('--notweet', action='store_true')
 parser.add_argument('--ignore_update', action='store_true')
 args = parser.parse_args()

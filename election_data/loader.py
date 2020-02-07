@@ -57,6 +57,8 @@ def load_url(url, parties, date_format='%d.%m.%Y', date_column='Datum'):
     polling_filter = polling_data['Date'] != 0
     polling_data = polling_data[polling_filter]
 
+    polling_data['Date'] = pd.to_datetime(polling_data['Date'])
+
     polling_data['Idx'] = polling_data['Date']
     polling_data = polling_data.set_index('Idx').sort_index(ascending=True)
     print("Done in ", time.time() - start_time, " ms")

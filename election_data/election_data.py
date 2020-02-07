@@ -28,7 +28,8 @@ class ElectionData():
             title='Election Data',
             next_election_date=None,
             filename=None,
-            results=None):
+            results=None,
+            display_elections=[]):
 
         self.parties = parties
         self.party_to_color = party_to_color
@@ -43,6 +44,7 @@ class ElectionData():
         self.title = title
         self.results = results
         self.filename = filename
+        self.display_elections = display_elections
 
         if filename:
             self._lazy_load(filename)

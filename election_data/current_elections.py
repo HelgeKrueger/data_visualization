@@ -4,6 +4,9 @@ import sys
 from .election_data import ElectionData
 
 
+available_current_elections = ['germany', 'hamburg', 'thuringia']
+
+
 def get_current_election_for_name(name):
     if name == 'germany':
         data = CurrentElections.germany()
@@ -11,6 +14,9 @@ def get_current_election_for_name(name):
     elif name == 'hamburg':
         data = CurrentElections.hamburg()
         tags = ['#HHWahl', '#ltwhh']
+    elif name == 'thuringia':
+        data = CurrentElections.thuringia()
+        tags = ['#ltwth']
     else:
         print("Unknown election ", name)
         sys.exit(1)
@@ -60,4 +66,29 @@ class CurrentElections:
             next_election_date=pd.to_datetime('2020-02-23'),
             start_date=pd.to_datetime('2019-01-01'),
             filename="tmp_hamburg"
+        )
+
+    @staticmethod
+    def thuringia():
+        return ElectionData(
+            'https://www.wahlrecht.de/umfragen/landtage/thueringen.htm',
+            title="Umfragen zur Landtagswahl in Thüringen",
+            parties=['CDU',
+                     'SPD',
+                     'GRÜNE',
+                     'FDP',
+                     'LINKE',
+                     'AfD'],
+            #      next_election_date=pd.to_datetime('2019-10-27'),
+            display_elections=[pd.to_datetime('2019-10-27')],
+            results={
+                'CDU': 21.7,
+                'SPD': 8.2,
+                'GRÜNE': 5.2,
+                'FDP': 5.0,
+                'LINKE': 31.0,
+                'AfD': 23.4
+            },
+            start_date=pd.to_datetime('2019-01-01'),
+            filename="tmp_thuringia"
         )

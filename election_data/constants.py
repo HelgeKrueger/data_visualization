@@ -4,7 +4,7 @@ party_to_color = {
     'CSU': 'black',
     'SPD': 'red',
     'GRÜNE': 'green',
-    'FDP': 'yellow',
+    'FDP': 'gold',
     'AfD': 'blue',
     'FW': 'orange',
     'LINKE': 'purple'}
