@@ -29,7 +29,7 @@ print('*' * 70)
 
 status_list.save()
 
-for election in ['germany', 'hamburg']:
+for election in ['germany', 'hamburg', 'thuringia']:
     data, tags = get_current_election_for_name(election)
 
     print()
