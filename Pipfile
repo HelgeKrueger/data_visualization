@@ -27,3 +27,4 @@ python_version = "3.7"
 
 [scripts]
 format = "autopep8 --in-place --aggressive --aggressive -r"
+check = "python check_updates.py"
