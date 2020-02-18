@@ -18,7 +18,7 @@ class MatplotlibPlotter:
         smoothed = self.election_data.smoothed_daily_data()
 
         for party in self.election_data.parties:
-            plt.plot(self.election_data.data['Date'], self.election_data.data[party], 'o', color=party_to_color[party], alpha=0.3)
+            plt.plot(self.election_data.data['Date'], self.election_data.data[party], 'o', color=party_to_color[party], alpha=0.3, markersize=3)
 
             # line, = plt.plot(self.election_data.data['Date'], self.election_data.data[party + '_mean'], '-', color=party_to_color[party])
             line, = plt.plot(smoothed['Date'], smoothed[party], '-', color=party_to_color[party])
